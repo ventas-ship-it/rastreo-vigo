@@ -1,36 +1,29 @@
 import express from "express";
-import bodyParser from "body-parser";
 import fetch from "node-fetch";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// URL de tu Apps Script (la que actualiza la hoja Google)
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztSPjpIR8xjmNwa2mcY99pYMnMqo5eSJSjPo2hOoVo7MoVdTt0ZayiyjERokftjWNerw/exec";
-
-app.use(bodyParser.json());
-
-// Endpoint que recibe datos desde Traccar
+// 🔹 Endpoint donde Traccar envía coordenadas
 app.post("/api/positions", async (req, res) => {
   try {
-    const { latitude, longitude } = req.body || {};
-    if (!latitude || !longitude) {
-      return res.status(400).send("Faltan coordenadas");
-    }
+    const { id, lat, lon } = req.body;
 
-    // Enviar coordenadas al Apps Script
-    const url = `${SCRIPT_URL}?lat=${latitude}&lng=${longitude}`;
-    await fetch(url);
+    // ✅ Mostramos en consola lo recibido
+    console.log(📍 Recibido de ${id}: ${lat}, ${lon});
+
+    // 🔹 Enviamos las coordenadas a tu Google Apps Script
+    const GAS_URL =
+      "https://script.google.com/macros/s/AKfycbztSPjpIR8xjmNwa2mcY99pYMnMqo5eSJSjPo2hOoVo7MoVdTt0ZayiyjERokftjWNerw/exec";
+    await fetch(${GAS_URL}?lat=${lat}&lng=${lon});
 
     res.status(200).send("OK");
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Error interno del servidor");
+  } catch (err) {
+    console.error("❌ Error al procesar:", err.message);
+    res.status(500).send("Error");
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Servidor VIGO activo. Esperando coordenadas de Traccar...");
-});
-
-app.listen(PORT, () => console.log(`✅ Servidor VIGO escuchando en puerto ${PORT}`));
+app.get("/", (req, res) => res.send("Servidor activo VIGO 🚀"));
+app.listen(10000, () => console.log("✅ Servidor escuchando en puerto 10000"));
