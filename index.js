@@ -19,7 +19,7 @@ app.post("/api/positions", async (req, res) => {
     console.log(`📍 Recibido de ${id}: ${lat}, ${lon}`);
 
     // Enviar a tu Google Script
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbztSPjpIR8xjmNwa2mcY99pYMnMqo5eSJSjPo2hOoVo7MoVdTt0ZayiyjERokftjWNerw/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwygjHBSLtc2-l3_wbzdfO00zGNP9Sf97yHrf40cfqN5bxAVQ7QiPfr2OPkJdA-se6R/exec";
     if (lat && lon) {
       await fetch(`${GAS_URL}?id=${id}&lat=${lat}&lng=${lon}`);
       console.log("✅ Coordenadas enviadas a Google Sheet");
