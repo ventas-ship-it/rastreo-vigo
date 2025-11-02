@@ -1,7 +1,9 @@
 import express from "express";
 import fetch from "node-fetch";
+import cors from "cors"; // ✅ Nuevo
 
 const app = express();
+app.use(cors()); // ✅ Permite peticiones desde cualquier dominio (Apps Script incluido)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,7 +27,7 @@ app.post("/api/positions", async (req, res) => {
       // Guardamos posición en memoria (para el mapa)
       ultimaPosicion = { id, lat, lon, ts: new Date().toISOString() };
 
-      // ✅ Enviar a Google Sheets (opcional, si querés guardar historial)
+      // ✅ Enviar a Google Sheets (opcional)
       const GAS_URL = "https://script.google.com/macros/s/AKfycbwygjHBSLtc2-l3_wbzdfO00zGNP9Sf97yHrf40cfqN5bxAVQ7QiPfr2OPkJdA-se6R/exec";
       try {
         await fetch(`${GAS_URL}?id=${id}&lat=${lat}&lng=${lon}`);
@@ -54,3 +56,4 @@ app.get("/api/live", (req, res) => {
 app.get("/", (req, res) => res.send("Servidor activo GIOX 🚀"));
 
 app.listen(10000, () => console.log("✅ Servidor escuchando en puerto 10000"));
+
